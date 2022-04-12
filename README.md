@@ -2,6 +2,8 @@
 
 ### Super light weight 0 dependencies emoji picker for React Native Apps. 
 
+<img width="200px" src="https://raw.githubusercontent.com/WoodburyShortridge/rn-emoji-picker/master/screenshot.png" />
+
 If using an asset loader for the emoji json (recommended):
 
 - 3.7 kB packaged
