@@ -1,0 +1,52 @@
+Arguments: 
+  /Users/woodbury/.nvm/versions/node/v16.13.0/bin/node /usr/local/Cellar/yarn/1.22.10/libexec/bin/yarn.js
+
+PATH: 
+  /Users/woodbury/.nvm/versions/node/v16.13.0/bin:/Users/woodbury/.rbenv/shims:/usr/local/opt/ruby/bin:/Library/Frameworks/Python.framework/Versions/3.6/bin:/usr/local/opt/python/libexec/bin:/Users/woodbury/user/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Library/Apple/usr/bin:/Users/woodbury/Library/Android/sdk/emulator:/Users/woodbury/Library/Android/sdk/tools:/Users/woodbury/Library/Android/sdk/tools/bin:/Users/woodbury/Library/Android/sdk/platform-tools:/Applications/DevDesktop/tools:/Applications/DevDesktop/drush_9
+
+Yarn version: 
+  1.22.10
+
+Node version: 
+  16.13.0
+
+Platform: 
+  darwin x64
+
+Trace: 
+  SyntaxError: /Users/woodbury/GitHub/rn-emoji-picker/example/package.json: Unexpected token } in JSON at position 411
+      at JSON.parse (<anonymous>)
+      at /usr/local/Cellar/yarn/1.22.10/libexec/lib/cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (/usr/local/Cellar/yarn/1.22.10/libexec/lib/cli.js:310:30)
+      at /usr/local/Cellar/yarn/1.22.10/libexec/lib/cli.js:321:13
+
+npm manifest: 
+  {
+    "main": "node_modules/expo/AppEntry.js",
+    "scripts": {
+      "start": "expo start",
+      "android": "expo start --android",
+      "ios": "expo start --ios",
+      "web": "expo start --web",
+      "eject": "expo eject"
+    },
+    "dependencies": {
+      "expo": "~44.0.0",
+      "expo-status-bar": "~1.2.0",
+      "react": "17.0.1",
+      "react-dom": "17.0.1",
+      "react-native": "0.64.3",
+      "react-native-web": "0.17.1",
+    },
+    "devDependencies": {
+      "@babel/core": "^7.12.9"
+    },
+    "private": true
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
