@@ -4,3 +4,5 @@ example/dist/
 
 # macOS
 .DS_Store
+
+.idea/*
