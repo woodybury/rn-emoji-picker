@@ -1,4 +1,4 @@
-import React, {useMemo, useRef, useState} from 'react';
+import React, {useMemo, useRef, useState} from 'react'
 import {
     View,
     Text,
@@ -7,71 +7,69 @@ import {
     FlatList,
     SectionList,
     Keyboard,
-} from 'react-native';
-import {TabBar} from "./tab-bar";
-import {Input} from "./input";
-import {emojis as defaultEmojis} from "./data/emojis";
-import {categories} from "./data/categories";
-import {HISTORY, ALL, WIDTH} from "./constants";
-import {EmojiCell} from "./emoji-cell";
+} from 'react-native'
+import {TabBar} from "./tab-bar"
+import {Input} from "./input"
+import {categories} from "./data/categories"
+import {RECENT, ALL, WIDTH} from "./constants"
+import {EmojiCell} from "./emoji-cell"
 
-export const emojiFromUtf16 = utf16 => String.fromCodePoint(...utf16.split("-").map(u => "0x" + u));
+export const emojiFromUtf16 = utf16 => String.fromCodePoint(...utf16.split("-").map(u => "0x" + u))
 
-const emojiByCategory = (category, emojiSource) => emojiSource.filter(e => e.category === category.toLowerCase());
-const sortEmoji = list => list.sort((a, b) => a.order - b.order);
-const mapEmojis = emoji => ({key: emoji.unified, emoji});
-const categoryKeys = Object.keys(categories);
+const emojiByCategory = (category, emojis) => emojis.filter(e => e.category === category.toLowerCase())
+const sortEmoji = list => list.sort((a, b) => a.order - b.order)
+const mapEmojis = emoji => ({key: emoji.unified, emoji})
+const categoryKeys = Object.keys(categories)
 
 const EmojiPicker = ({
-                         onSelect = () => null,
-                         history = [],
-                         setHistory = () => null,
+                         recent = [],
+                         emojis = [],
                          loading = false,
                          autoFocus = true,
-                         emojis = null,
-                         darkMode = true
+                         darkMode = true,
+                         onSelect = () => null,
+                         onChangeRecent = () => null,
                      }) => {
-    const [searchQuery, setSearchQuery] = useState('');
-    const [category, setCategory] = useState(categories.all);
-    const isAll = category.name.toLowerCase() === ALL;
-    const hasHistory = history.length > 0;
-    const colSize = Math.floor(WIDTH / 6);
-    const sectionList = useRef(null);
-    const emojiSource = emojis || defaultEmojis;
+    const [searchQuery, setSearchQuery] = useState('')
+    const [category, setCategory] = useState(categories.all)
+    const isAll = category.name.toLowerCase() === ALL
+    const hasRecent = recent.length > 0
+    const colSize = Math.floor(WIDTH / 6)
+    const sectionList = useRef(null)
 
     const emojiList = useMemo(() => {
-        const list = {};
+        const list = {}
         categoryKeys.forEach(c => {
-            const name = categories[c].name;
-            list[name] = sortEmoji(emojiByCategory(name, emojiSource));
-        });
+            const name = categories[c].name
+            list[name] = sortEmoji(emojiByCategory(name, emojis))
+        })
         return list
-    }, [emojiSource, categories]);
+    }, [emojis, categories])
 
     const selectTab = category => {
         if (!loading && sectionList?.current) {
-            sectionList.current.scrollToLocation({sectionIndex: 0, itemIndex: 0, animated: false});
-            setSearchQuery('');
-            setCategory(category);
+            sectionList.current.scrollToLocation({sectionIndex: 0, itemIndex: 0, animated: false})
+            setSearchQuery('')
+            setCategory(category)
         }
-    };
+    }
 
     const selectEmoji = (emoji) => {
-        addToHistory(emoji);
-        onSelect(emoji);
-    };
+        addToRecent(emoji)
+        onSelect(emoji)
+    }
 
-    const addToHistory = emoji => {
-        let newHistory;
-        const existing = history.find(h => h.unified === emoji.unified);
+    const addToRecent = emoji => {
+        let newRecent
+        const existing = recent.find(h => h.unified === emoji.unified)
         if (existing) {
-            const filtered = history.filter(h => h.unified !== emoji.unified);
-            newHistory = [emoji, ...filtered];
+            const filtered = recent.filter(h => h.unified !== emoji.unified)
+            newRecent = [emoji, ...filtered]
         } else {
-            newHistory = [emoji, ...history];
+            newRecent = [emoji, ...recent]
         }
-        setHistory(newHistory.splice(0, 18));
-    };
+        onChangeRecent(newRecent.splice(0, 18))
+    }
 
     const renderEmojiCell = ({item}) => (
         <EmojiCell
@@ -80,7 +78,7 @@ const EmojiPicker = ({
             onPress={() => selectEmoji(item.emoji)}
             colSize={colSize}
         />
-    );
+    )
 
     const renderEmojiRow = ({item}) => {
         return (
@@ -90,8 +88,8 @@ const EmojiPicker = ({
                 renderItem={renderEmojiCell}
                 keyboardShouldPersistTaps="always"
             />
-        );
-    };
+        )
+    }
 
 
     const renderSectionHeader = ({section: {name}}) => {
@@ -104,39 +102,44 @@ const EmojiPicker = ({
         )
     }
 
-    const searchData = () => {
-        const filtered = emojiSource.filter(e => {
-            const term = searchQuery.toLowerCase();
-            if (searchQuery.toLowerCase().includes(e.emoji)) return true;
-            const keywords = e.keywords.join(' ');
-            return !!keywords && keywords.toLowerCase().includes(term);
-        });
-        return [{name: 'search', data: [sortEmoji(filtered).map(mapEmojis)]}];
+    const searchData = (searchQuery) => {
+        let emoji
+        const filtered = emojis.filter(e => {
+            const term = searchQuery.toLowerCase()
+            if (term.includes(e.emoji)) {
+                emoji = e
+                return true
+            }
+            const keywords = e.keywords.join(' ')
+            return !!keywords && keywords.includes(term)
+        })
+        if (emoji) onSelect(emoji)
+        return [{name: 'search', data: [sortEmoji(filtered).map(mapEmojis)]}]
     }
 
     const parseSectionData = (category) => {
         if (category === categories.all) {
-            let largeList = [];
+            let largeList = []
             categoryKeys.forEach(c => {
-                if (c === ALL && c === HISTORY) return;
-                const name = categories[c].name;
-                const list = emojiList[name];
-                largeList = largeList.concat(list);
-            });
-            return largeList.map(mapEmojis);
-        } else if (category === categories.history) {
-            return history.map(mapEmojis);
+                if (c === ALL && c === RECENT) return
+                const name = categories[c].name
+                const list = emojiList[name]
+                largeList = largeList.concat(list)
+            })
+            return largeList.map(mapEmojis)
+        } else if (category === categories.recent) {
+            return recent.map(mapEmojis)
         } else {
-            const name = category.name;
-            return emojiList[name].map(mapEmojis);
+            const name = category.name
+            return emojiList[name].map(mapEmojis)
         }
-    };
+    }
 
     const sectionData = (categories) => {
         return categories.map(category => {
-            return {name: category.name, data: [parseSectionData(category)]};
-        });
-    };
+            return {name: category.name, data: [parseSectionData(category)]}
+        })
+    }
 
     return (
         <View style={[styles.container, {backgroundColor: darkMode ? '#000' : '#fff'}]}>
@@ -162,13 +165,13 @@ const EmojiPicker = ({
                         sections={
                             !searchQuery ?
                                 sectionData(
-                                    isAll && hasHistory ?
-                                        [categories.history, category]
+                                    isAll && hasRecent ?
+                                        [categories.recent, category]
                                         :
                                         [category]
                                 )
                                 :
-                                searchData()
+                                searchData(searchQuery)
                         }
                         keyExtractor={(item) => item.unified}
                         renderItem={renderEmojiRow}
@@ -190,14 +193,14 @@ const EmojiPicker = ({
                 )}
             </View>
         </View>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     container: {flex: 1, width: '100%'},
     loader: {flex: 1, alignItems: 'center', justifyContent: 'center'},
     searchbarContainer: {width: '100%', zIndex: 1, padding: 8},
     sectionHeader: {margin: 8, fontSize: 17, width: '100%', color: '#999'},
-});
+})
 
-export default EmojiPicker;
+export default EmojiPicker

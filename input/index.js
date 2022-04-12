@@ -1,17 +1,17 @@
-import { View, StyleSheet, TextInput } from 'react-native';
+import { View, StyleSheet, TextInput } from 'react-native'
 
 export const Input = ({
-        placeholder,
-        value,
-        onChangeText,
-        autoFocus,
-        darkMode
-    }) => {
+                          placeholder,
+                          value,
+                          onChangeText,
+                          autoFocus,
+                          darkMode
+                      }) => {
 
     const changeText = (val) => {
-        if (!onChangeText) return;
-        onChangeText(val);
-    };
+        if (!onChangeText) return
+        onChangeText(val)
+    }
 
     return (
         <View style={[styles.container, {
@@ -36,8 +36,8 @@ export const Input = ({
                 />
             </View>
         </View>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -53,4 +53,4 @@ const styles = StyleSheet.create({
         height: 40,
         fontSize: 16,
     }
-});
+})

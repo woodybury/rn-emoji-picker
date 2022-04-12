@@ -1,4 +1,4 @@
-import {Text, TouchableOpacity} from "react-native";
+import {Text, TouchableOpacity} from "react-native"
 
 export const EmojiCell = ({emoji, colSize, onPress}) => (
     <TouchableOpacity
@@ -8,4 +8,4 @@ export const EmojiCell = ({emoji, colSize, onPress}) => (
     >
         <Text style={{color: "#fff", fontSize: colSize - 12}} children={emoji.emoji}/>
     </TouchableOpacity>
-);
+)

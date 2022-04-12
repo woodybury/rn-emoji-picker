@@ -1,6 +1,6 @@
 export const categories = {
     all: {symbol: null, name: 'All'},
-    history: {symbol: null, name: 'Recently used'},
+    recent: {symbol: null, name: 'Recently used'},
     emotion: {symbol: '😀', name: 'Smileys & Emotion'},
     people: {symbol: '🧑', name: 'People & Body'},
     nature: {symbol: '🦄', name: 'Animals & Nature'},
@@ -10,4 +10,4 @@ export const categories = {
     objects: {symbol: '💡', name: 'Objects'},
     symbols: {symbol: '🔣', name: 'Symbols'},
     flags: {symbol: '🏳️‍🌈', name: 'Flags'},
-};
+}

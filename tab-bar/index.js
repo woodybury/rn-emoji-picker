@@ -1,8 +1,8 @@
 import {View, Text, TouchableOpacity, StyleSheet} from "react-native";
-import {WIDTH, ALL, HISTORY} from "../constants";
+import {WIDTH, ALL, RECENT} from "../constants";
 
 export const TabBar = ({categories, activeCategory, onPress, darkMode}) => {
-    const categoryKeys = Object.keys(categories).filter(c => c !== ALL && c !== HISTORY);
+    const categoryKeys = Object.keys(categories).filter(c => c !== ALL && c !== RECENT);
     const tabSize = WIDTH / categoryKeys.length;
 
     return (
