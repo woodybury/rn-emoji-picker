@@ -13,6 +13,6 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git@github.com:WoodburyShortridge/rn-emoji-picker.git"
   }
 }
