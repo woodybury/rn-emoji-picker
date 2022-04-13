@@ -4,7 +4,7 @@
 
 6.45 kB un-compiled if using an asset loader for the emoji json (recommended)
 
-### 0 dependencies 🚫 👶
+### Zer0 dependencies 🚫 👶
 
 Aside from React Native peer obvs
 
