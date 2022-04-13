@@ -12,7 +12,7 @@ Aside from React Native peer obvs
 
 To be or not to be, that is the question
 
-<img width="200px" src="https://raw.githubusercontent.com/WoodburyShortridge/rn-emoji-picker/master/screenshot.png" />
+<img width="100%" src="https://raw.githubusercontent.com/WoodburyShortridge/rn-emoji-picker/master/screenshot.png" />
 
 
 ### Un-opinionated 🤔
