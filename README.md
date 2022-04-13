@@ -2,7 +2,7 @@
 
 ### Super light weight 🪶
 
-6.45 kB if using an asset loader for the emoji json (recommended)
+**6.45 kB** if using an asset loader for the emoji json (recommended)
 
 ### Zer0 dependencies 🚫 👶
 

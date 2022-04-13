@@ -4,6 +4,7 @@ import {WIDTH, ALL, RECENT} from "../constants";
 export const TabBar = ({categories, activeCategory, onPress, darkMode}) => {
     const categoryKeys = Object.keys(categories).filter(c => c !== ALL && c !== RECENT);
     const tabSize = WIDTH / categoryKeys.length;
+    const uiSize = tabSize - 20;
 
     return (
         <View style={styles.container}>
@@ -24,14 +25,14 @@ export const TabBar = ({categories, activeCategory, onPress, darkMode}) => {
                             <Text
                                 style={[
                                     styles.emoji,
-                                    {fontSize: tabSize - 20}
+                                    {fontSize: uiSize}
                                 ]}
                             >
-                                {category.symbol}
+                                {category.emoji}
                             </Text>
                             <View
                                 style={{
-                                    width: tabSize - 20,
+                                    width: uiSize,
                                     height: 1,
                                     backgroundColor: category === activeCategory ? darkMode ?  '#fff' : '#323333' : 'transparent'
                                 }}

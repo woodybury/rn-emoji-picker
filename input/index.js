@@ -1,17 +1,12 @@
 import { View, StyleSheet, TextInput } from 'react-native'
 
 export const Input = ({
-                          placeholder,
-                          value,
-                          onChangeText,
-                          autoFocus,
-                          darkMode
-                      }) => {
-
-    const changeText = (val) => {
-        if (!onChangeText) return
-        onChangeText(val)
-    }
+        placeholder,
+        value,
+        onChangeText,
+        autoFocus,
+        darkMode
+    }) => {
 
     return (
         <View style={[styles.container, {
@@ -24,7 +19,7 @@ export const Input = ({
                     clearButtonMode={'while-editing'}
                     style={[styles.input, {color: darkMode ? '#fff' : '#323333'}]}
                     returnKeyType={'search'}
-                    onChangeText={changeText}
+                    onChangeText={onChangeText}
                     value={value}
                     placeholder={placeholder}
                     placeholderTextColor='#999'
