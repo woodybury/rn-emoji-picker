@@ -1,12 +1,14 @@
 {
   "name": "rn-emoji-picker",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "React native emoji picker | dark/light mode & 0 dependencies",
   "keywords": [
     "emoji",
     "react",
     "react native",
-    "picker"
+    "picker",
+    "selector",
+    "expo"
   ],
   "main": "index.js",
   "author": "Woodbury Shortridge",

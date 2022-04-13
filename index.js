@@ -32,8 +32,7 @@ const EmojiPicker = ({
                      }) => {
     const [searchQuery, setSearchQuery] = useState('')
     const [category, setCategory] = useState(categories.all)
-    const isAll = category.name.toLowerCase() === ALL
-    const hasRecent = recent.length > 0
+    const showRecent = category.name.toLowerCase() === ALL && !!recent.length
     const colSize = Math.floor(WIDTH / 6)
     const sectionList = useRef(null)
 
@@ -110,23 +109,22 @@ const EmojiPicker = ({
                 emoji = e
                 return true
             }
-            const keywords = e.keywords.join(' ')
-            return !!keywords && keywords.includes(term)
+            return e.keywords.some(e => e.includes(term))
         })
         if (emoji) onSelect(emoji)
         return [{name: 'search', data: [sortEmoji(filtered).map(mapEmojis)]}]
     }
 
-    const parseSectionData = (category) => {
+    const parseSectionEmojis = (category) => {
         if (category === categories.all) {
-            let largeList = []
+            const allList = []
             categoryKeys.forEach(c => {
-                if (c === ALL && c === RECENT) return
+                if (c === ALL || c === RECENT) return
                 const name = categories[c].name
                 const list = emojiList[name]
-                largeList = largeList.concat(list)
+                allList.push(...list)
             })
-            return largeList.map(mapEmojis)
+            return allList.map(mapEmojis)
         } else if (category === categories.recent) {
             return recent.map(mapEmojis)
         } else {
@@ -135,11 +133,21 @@ const EmojiPicker = ({
         }
     }
 
-    const sectionData = (categories) => {
+    const sectionEmojis = (categories) => {
         return categories.map(category => {
-            return {name: category.name, data: [parseSectionData(category)]}
+            return {name: category.name, data: [parseSectionEmojis(category)]}
         })
     }
+
+    const sections = searchQuery.length ?
+        searchData(searchQuery)
+        :
+        sectionEmojis(
+            showRecent ?
+                [categories.recent, category]
+                :
+                [category]
+        )
 
     return (
         <View style={[styles.container, {backgroundColor: darkMode ? '#000' : '#fff'}]}>
@@ -162,17 +170,7 @@ const EmojiPicker = ({
                 {!loading ? (
                     <SectionList
                         flex={1}
-                        sections={
-                            !searchQuery ?
-                                sectionData(
-                                    isAll && hasRecent ?
-                                        [categories.recent, category]
-                                        :
-                                        [category]
-                                )
-                                :
-                                searchData(searchQuery)
-                        }
+                        sections={sections}
                         keyExtractor={(item) => item.unified}
                         renderItem={renderEmojiRow}
                         renderSectionHeader={renderSectionHeader}
