@@ -2,7 +2,7 @@
 
 ### Super light weight 🪶
 
-6.45 kB un-compiled if using an asset loader for the emoji json (recommended)
+6.45 kB if using an asset loader for the emoji json (recommended)
 
 ### Zer0 dependencies 🚫 👶
 
@@ -12,7 +12,7 @@ Aside from React Native peer obvs
 
 To be or not to be, that is the question
 
-<img width="100%" src="https://raw.githubusercontent.com/WoodburyShortridge/rn-emoji-picker/master/screenshot.png" />
+<img width="100%" src="https://raw.githubusercontent.com/WoodburyShortridge/rn-emoji-picker/master/screenshot/screenshot.png" />
 
 
 ### Un-opinionated 🤔
@@ -23,14 +23,14 @@ To be or not to be, that is the question
 
 `npm i rn-emoji-picker` or `yarn rn-emoji-picker` you know what to do!
 
-### Example usage 
+### Example usage 👨‍💻
 
 ```javascript
 import {StyleSheet, View} from 'react-native'
 import EmojiPicker, {emojiFromUtf16} from 'rn-emoji-picker'
 import {emojis} from 'rn-emoji-picker/data/emojis'
-// recommend using an asset loader for emojis
-// or fetching over network for decreased bundle size 🪶
+// for decreased bundle size recommend using an asset loader 🪶 
+// or fetching over network 🪶
 import {useState} from 'react'
 
 console.log(emojiFromUtf16('1F9E8')) // "🧨" helper to decode unified
@@ -47,8 +47,8 @@ export default function App() {
             autoFocus={true} // 💻 autofocus search input
             loading={false} // ⌛ use if your emoji data or recent store is async
             darkMode={true} // 🌙☀️ to be or not to be, that is the question
-            onSelect={console.log} // 🖕 callback when user selects emoji - returns emoji obj
-            onChangeRecent={setRecent} // 📦 callback to update recent storage - arr of emoji objs
+            onSelect={console.log} // 🖕 callback when user selects emoji - emoji obj
+            onChangeRecent={setRecent} // 📦 callback to update recent storage - arr of emoji obj
         />
     </View>
   )
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
 })
 ```
 
-### Data structure
+### Data structure 📈
 
 Example emoji obj 😊
 
