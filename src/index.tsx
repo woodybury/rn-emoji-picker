@@ -12,9 +12,9 @@ import {categories, SEARCH, RECENT, WIDTH} from './constants'
 import {Emoji, Category} from './interfaces'
 import SectionHeader from './sectionHeader'
 import EmojiRow from './emojiRow'
-import {chunkEmojis, sortEmojis, emojiByCategory, calcSectionItemLayout} from './utils'
+import {chunkEmojis, sortEmojis, emojiByCategory} from './utils'
 
-// helper fn for end users
+// helper fn for end users see https://github.com/yonahforst/react-native-emoji-picker/issues/4
 export const emojiFromUtf16 = (utf16: string) => String.fromCodePoint(...utf16.split('-').map(u => '0x' + u) as any)
 
 interface Props {
@@ -45,8 +45,8 @@ const EmojiPicker = ({
 	const colSize = Math.floor(WIDTH / perLine)
 	const sectionList = useRef<any>(null)
 
-	const {sections, total} = useMemo(() => { // expensive calc
-		const emojiList = {}
+	const {sections, total} = useMemo(() => { // expensive calc @todo speed up
+		const emojiList = {} // map of emojis to categories
 		let total = 0
 		categories.forEach(category => {
 			const key = category.key
@@ -59,25 +59,25 @@ const EmojiPicker = ({
 		return ({sections, total})
 	}, [emojis, categories, recent])
 
-	const searchResults = useMemo(() => { // expensive calc
+	const searchResults = useMemo(() => { // expensive calc @todo speed up?
 		if (!searchQuery.length) return []
 		let emoji
 		const filtered = emojis.filter(e => {
 			const term = searchQuery.toLowerCase()
 			if (term.includes(e.emoji)) {
-				emoji = e
+				emoji = e // if user types an emoji select it
 				return true
 			}
 			return e.keywords.some(e => e.includes(term))
 		})
 		if (emoji) onSelect(emoji)
-		return [{name: 'Search results', data: chunkEmojis(filtered, SEARCH, perLine)}]
+		return [{name: 'Search results', data: chunkEmojis(filtered, SEARCH, perLine)}] // create one section on results
 	}, [emojis, searchQuery])
 
 	const selectTab = (category: Category) => {
 		if (!loading && sectionList?.current) {
 			const index = categories.findIndex(c => c.key === category.key)
-			sectionList.current.scrollToLocation({
+			sectionList.current.scrollToLocation({ // scroll to category
 				sectionIndex: index,
 				itemIndex: 0,
 				animated: false
@@ -95,10 +95,10 @@ const EmojiPicker = ({
 	const addToRecent = (emoji: Emoji) => {
 		const newRecent: Emoji[] = []
 		const existing = recent.find(h => h.unified === emoji.unified)
-		if (existing) {
+		if (existing) { // if already saved, bump to the front
 			const filtered = recent.filter(h => h.unified !== emoji.unified)
 			newRecent.push(emoji, ...filtered)
-		} else {
+		} else { // add to the front
 			newRecent.push(emoji, ...recent)
 		}
 		onChangeRecent(newRecent.splice(0, 18))
@@ -146,7 +146,7 @@ const EmojiPicker = ({
 						ref={sectionList}
 						initialNumToRender={total} // @todo calc section list item layout see calcSectionItemLayout util method
 						onScrollBeginDrag={Keyboard.dismiss}
-						onViewableItemsChanged={data => {
+						onViewableItemsChanged={data => { // update category from scroll pos
 							const categoryKey = data.viewableItems[0]?.item?.category
 							if (!categoryKey || categoryKey === category.key) return
 							if (categoryKey === 'search') return setCategory(categories[0])

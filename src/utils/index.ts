@@ -1,9 +1,12 @@
 import {Emoji} from '../interfaces'
 
+// filter emojis by category name
 export const emojiByCategory = (categoryName: string, emojis: Emoji[]) => emojis.filter(e => e.category.toLowerCase() === categoryName.toLowerCase())
 
+// sort dec using order param
 export const sortEmojis = (emojis: Emoji[]) => emojis.sort((a, b) => a.order - b.order)
 
+// chunk emojis into arrays for each row
 export const chunkEmojis = (emojis: Emoji[], key: string, chunkSize = 6) => {
 	const chunkedArr = []
 	for (let i = 0; i < emojis.length; i += chunkSize) {
