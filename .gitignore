@@ -2,4 +2,10 @@
 .DS_Store
 
 # ide
-.idea/*
+.idea/
+
+# deps
+node_modules/
+
+# prod
+dist/

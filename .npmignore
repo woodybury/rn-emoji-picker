@@ -2,6 +2,14 @@
 .DS_Store
 
 # ide
-.idea/*
+.idea/
 
-screenshot/*
+# rm
+screenshot/
+
+# dev
+src/
+example/
+
+# deps
+node_modules/

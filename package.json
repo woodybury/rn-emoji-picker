@@ -10,7 +10,18 @@
     "selector",
     "expo"
   ],
-  "main": "index.js",
+  "main": "dist/index.js",
+  "scripts": {
+    "compile": "tsc --watch",
+    "example": "cp -r dist/. example/dist"
+  },
+  "devDependencies": {
+    "@types/react": "18.0.5",
+    "@types/react-native": "0.67.4",
+    "react": "17.0.2",
+    "react-native": "0.68.1",
+    "typescript": "4.6.3"
+  },
   "author": "Woodbury Shortridge",
   "license": "MIT",
   "repository": {
