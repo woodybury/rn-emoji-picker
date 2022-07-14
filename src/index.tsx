@@ -46,6 +46,7 @@ const EmojiPicker = ({
 	const [category, setCategory] = useState(categories[1]) // smiley
 	const colSize = Math.floor(WIDTH / perLine)
 	const sectionList = useRef<any>(null)
+	const [init, setInit] = useState(true)
 
 	const {sections} = useMemo(() => { // expensive calc @todo speed up
 		const emojiList = {} // map of emojis to categories
@@ -76,6 +77,7 @@ const EmojiPicker = ({
 	const selectTab = (category: Category) => {
 		setSearchQuery('')
 		setCategory(category)
+		setInit(false)
 	}
 
 	const selectEmoji = (emoji: Emoji) => {
@@ -103,6 +105,8 @@ const EmojiPicker = ({
 		colSize={colSize}
 	/>
 
+	const activeSection = sections.find(s => s.key === category.key)
+
 	return (
 		<View style={[styles.container, {backgroundColor}]}>
 			<TabBar
@@ -124,7 +128,7 @@ const EmojiPicker = ({
 				{!loading ? (
 					<SectionList
 						style={{flex: 1}}
-						sections={searchQuery ? searchResults : [sections.find(s => s.key === category.key)]}
+						sections={searchQuery ? searchResults : init && recent.length ? [sections[0], activeSection] : [activeSection]}
 						keyExtractor={(item) => item.key}
 						renderItem={renderEmojiRow}
 						renderSectionHeader={renderSectionHeader}
