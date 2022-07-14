@@ -45,16 +45,16 @@ export const Input = ({
 
 const styles = StyleSheet.create({
 	container: {
-		borderRadius: 2,
+		borderRadius: 4,
 		overflow: 'hidden',
-		height: 40,
+		height: 34,
 		flexDirection: 'row',
 		alignItems: 'center'
 	},
 	input: {
 		flex: 1,
 		paddingHorizontal: 15,
-		height: 40,
+		height: 34,
 		fontSize: 16
 	}
 })

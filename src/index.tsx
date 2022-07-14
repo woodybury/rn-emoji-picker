@@ -24,6 +24,7 @@ interface Props {
 	autoFocus: boolean
 	darkMode: boolean
 	perLine: number
+	backgroundColor?: string
 
 	onSelect(emoji: Emoji): void
 
@@ -36,27 +37,25 @@ const EmojiPicker = ({
 	                     loading = false,
 	                     autoFocus = true,
 	                     darkMode = true,
+											 backgroundColor = darkMode ? '#000' : '#fff',
 	                     perLine = 8,
 	                     onSelect = (emoji: Emoji) => null,
 	                     onChangeRecent = (recent: Emoji[]) => null
                      }: Props) => {
 	const [searchQuery, setSearchQuery] = useState('')
-	const [category, setCategory] = useState(categories[0])
+	const [category, setCategory] = useState(categories[1]) // smiley
 	const colSize = Math.floor(WIDTH / perLine)
 	const sectionList = useRef<any>(null)
 
-	const {sections, total} = useMemo(() => { // expensive calc @todo speed up
+	const {sections} = useMemo(() => { // expensive calc @todo speed up
 		const emojiList = {} // map of emojis to categories
-		let total = 0
 		categories.forEach(category => {
 			const key = category.key
 			const list = key === RECENT ? recent : sortEmojis(emojiByCategory(category.name, emojis))
-			const chunks = chunkEmojis(list, key, perLine)
-			total += chunks.length
 			emojiList[key] = chunkEmojis(list, key, perLine)
 		})
-		const sections = categories.map(category => ({name: category.name, data: emojiList[category.key]}))
-		return ({sections, total})
+		const sections = categories.map(category => ({name: category.name, key: category.key, data: emojiList[category.key]}))
+		return ({sections})
 	}, [emojis, categories, recent])
 
 	const searchResults = useMemo(() => { // expensive calc @todo speed up?
@@ -71,20 +70,12 @@ const EmojiPicker = ({
 			return e.keywords.some(e => e.includes(term))
 		})
 		if (emoji) onSelect(emoji)
-		return [{name: 'Search results', data: chunkEmojis(filtered, SEARCH, perLine)}] // create one section on results
+		return [{name: 'Search results', key: SEARCH, data: chunkEmojis(filtered, SEARCH, perLine)}] // create one section on results
 	}, [emojis, searchQuery])
 
 	const selectTab = (category: Category) => {
-		if (!loading && sectionList?.current) {
-			const index = categories.findIndex(c => c.key === category.key)
-			sectionList.current.scrollToLocation({ // scroll to category
-				sectionIndex: index,
-				itemIndex: 0,
-				animated: false
-			})
-			setSearchQuery('')
-			setCategory(category)
-		}
+		setSearchQuery('')
+		setCategory(category)
 	}
 
 	const selectEmoji = (emoji: Emoji) => {
@@ -113,7 +104,7 @@ const EmojiPicker = ({
 	/>
 
 	return (
-		<View style={[styles.container, {backgroundColor: darkMode ? '#000' : '#fff'}]}>
+		<View style={[styles.container, {backgroundColor}]}>
 			<TabBar
 				activeCategory={category}
 				onPress={selectTab}
@@ -133,26 +124,41 @@ const EmojiPicker = ({
 				{!loading ? (
 					<SectionList
 						style={{flex: 1}}
-						sections={searchResults.length ? searchResults : sections}
-						keyExtractor={item => item.key}
+						sections={searchQuery ? searchResults : [sections.find(s => s.key === category.key)]}
+						keyExtractor={(item) => item.key}
 						renderItem={renderEmojiRow}
 						renderSectionHeader={renderSectionHeader}
 						contentContainerStyle={{paddingBottom: colSize}}
 						horizontal={false}
-						keyboardShouldPersistTaps={'handled'}
-						removeClippedSubviews={true}
+						keyboardShouldPersistTaps={"handled"}
+						removeClippedSubviews
 						showsVerticalScrollIndicator={false}
 						stickySectionHeadersEnabled={false}
 						ref={sectionList}
-						initialNumToRender={total} // @todo calc section list item layout see calcSectionItemLayout util method
 						onScrollBeginDrag={Keyboard.dismiss}
-						onViewableItemsChanged={data => { // update category from scroll pos
-							const categoryKey = data.viewableItems[0]?.item?.category
-							if (!categoryKey || categoryKey === category.key) return
-							if (categoryKey === 'search') return setCategory(categories[0])
-							setCategory(categories.find(c => c.key === categoryKey)!)
-						}}
 					/>
+					// <SectionList
+					// 	style={{flex: 1}}
+					// 	sections={searchResults.length ? searchResults : sections}
+					// 	keyExtractor={item => item.key}
+					// 	renderItem={renderEmojiRow}
+					// 	renderSectionHeader={renderSectionHeader}
+					// 	contentContainerStyle={{paddingBottom: colSize}}
+					// 	horizontal={false}
+					// 	keyboardShouldPersistTaps={'handled'}
+					// 	removeClippedSubviews={true}
+					// 	showsVerticalScrollIndicator={false}
+					// 	stickySectionHeadersEnabled={false}
+					// 	ref={sectionList}
+					// 	initialNumToRender={total} // @todo calc section list item layout see calcSectionItemLayout util method
+					// 	onScrollBeginDrag={Keyboard.dismiss}
+					// 	onViewableItemsChanged={data => { // update category from scroll pos
+					// 		const categoryKey = data.viewableItems[0]?.item?.category
+					// 		if (!categoryKey || categoryKey === category.key) return
+					// 		if (categoryKey === 'search') return setCategory(categories[0])
+					// 		setCategory(categories.find(c => c.key === categoryKey)!)
+					// 	}}
+					// />
 				) : (
 					<View style={styles.loader}>
 						<ActivityIndicator size="large" color="#323333"/>

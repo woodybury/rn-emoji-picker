@@ -51,6 +51,7 @@ export default function App() {
                 perLine={7} // # of emoji's per line
                 onSelect={console.log} // callback when user selects emoji - returns emoji obj
                 onChangeRecent={setRecent} // callback to update recent storage - arr of emoji objs
+	            // backgroundColor={'#000'} // optional custom bg color
             />
             <StatusBar style="light"/>
         </View>
