@@ -45,8 +45,9 @@ const EmojiPicker = ({
 						 defaultCategory = 'emotion'
                      }: Props) => {
 	const [searchQuery, setSearchQuery] = useState('')
+	const [width, setWidth] = useState(0);
 	const [category, setCategory] = useState(categories.find(c => c.key === defaultCategory) || categories[1]) // smiley
-	const colSize = Math.floor(WIDTH / perLine)
+	const colSize = Math.floor(width / perLine)
 	const sectionList = useRef<any>(null)
 	const [init, setInit] = useState(true)
 
@@ -110,7 +111,9 @@ const EmojiPicker = ({
 	const activeSection = sections.find(s => s.key === category.key)
 
 	return (
-		<View style={[styles.container, {backgroundColor}]}>
+		<View style={[styles.container, {backgroundColor}]} onLayout={event =>
+			setWidth(event.nativeEvent.layout.width)
+		  }>
 			<TabBar
 				activeCategory={category}
 				onPress={selectTab}
