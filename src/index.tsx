@@ -17,6 +17,7 @@ import {chunkEmojis, sortEmojis, emojiByCategory} from './utils'
 // helper fn for end users see https://github.com/yonahforst/react-native-emoji-picker/issues/4
 export const emojiFromUtf16 = (utf16: string) => String.fromCodePoint(...utf16.split('-').map(u => '0x' + u) as any)
 
+type Categories = `${typeof categories[number]['key']}`;
 interface Props {
 	recent?: Emoji[]
 	emojis: Emoji[]
@@ -25,7 +26,7 @@ interface Props {
 	darkMode: boolean
 	perLine: number
 	backgroundColor?: string
-
+	defaultCategory?: Categories
 	onSelect(emoji: Emoji): void
 
 	onChangeRecent?(recent: Emoji[]): void
@@ -37,13 +38,14 @@ const EmojiPicker = ({
 	                     loading = false,
 	                     autoFocus = true,
 	                     darkMode = true,
-											 backgroundColor = darkMode ? '#000' : '#fff',
+						 backgroundColor = darkMode ? '#000' : '#fff',
 	                     perLine = 8,
 	                     onSelect = (emoji: Emoji) => null,
-	                     onChangeRecent = (recent: Emoji[]) => null
+	                     onChangeRecent = (recent: Emoji[]) => {},
+						 defaultCategory = 'emotion'
                      }: Props) => {
 	const [searchQuery, setSearchQuery] = useState('')
-	const [category, setCategory] = useState(categories[1]) // smiley
+	const [category, setCategory] = useState(categories.find(c => c.key === defaultCategory) || categories[1]) // smiley
 	const colSize = Math.floor(WIDTH / perLine)
 	const sectionList = useRef<any>(null)
 	const [init, setInit] = useState(true)

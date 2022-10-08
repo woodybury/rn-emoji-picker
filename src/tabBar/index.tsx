@@ -3,7 +3,7 @@ import {WIDTH} from '../constants'
 import {Category} from '../interfaces'
 
 interface Props {
-	categories: Category[]
+	categories: Readonly<Category[]>
 	activeCategory: Category
 	darkMode: boolean
 
