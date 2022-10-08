@@ -18,7 +18,7 @@ import {chunkEmojis, sortEmojis, emojiByCategory} from './utils'
 export const emojiFromUtf16 = (utf16: string) => String.fromCodePoint(...utf16.split('-').map(u => '0x' + u) as any)
 
 interface Props {
-	recent: Emoji[]
+	recent?: Emoji[]
 	emojis: Emoji[]
 	loading: boolean
 	autoFocus: boolean
@@ -28,7 +28,7 @@ interface Props {
 
 	onSelect(emoji: Emoji): void
 
-	onChangeRecent(recent: Emoji[]): void
+	onChangeRecent?(recent: Emoji[]): void
 }
 
 const EmojiPicker = ({
