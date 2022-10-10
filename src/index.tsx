@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import {TabBar} from './tabBar'
 import {Input} from './input'
-import {categories, SEARCH, RECENT, WIDTH} from './constants'
+import {categories , SEARCH, RECENT} from './constants'
 import {Emoji, Category} from './interfaces'
 import SectionHeader from './sectionHeader'
 import EmojiRow from './emojiRow'
@@ -27,6 +27,7 @@ interface Props {
 	perLine: number
 	backgroundColor?: string
 	defaultCategory?: Categories
+	enabledCategories?: Categories[],
 	onSelect(emoji: Emoji): void
 
 	onChangeRecent?(recent: Emoji[]): void
@@ -42,25 +43,27 @@ const EmojiPicker = ({
 	                     perLine = 8,
 	                     onSelect = (emoji: Emoji) => null,
 	                     onChangeRecent = (recent: Emoji[]) => {},
-						 defaultCategory = 'emotion'
+						 defaultCategory = 'emotion',
+						 enabledCategories = categories.values()['key'],
                      }: Props) => {
 	const [searchQuery, setSearchQuery] = useState('')
 	const [width, setWidth] = useState(0);
-	const [category, setCategory] = useState(categories.find(c => c.key === defaultCategory) || categories[1]) // smiley
 	const colSize = Math.floor(width / perLine)
 	const sectionList = useRef<any>(null)
 	const [init, setInit] = useState(true)
+	const finalCategories = categories.filter(category => enabledCategories.includes(category.key))
+	const [category, setCategory] = useState<Category>(finalCategories.find(c => c.key === defaultCategory) || finalCategories[1]) // smiley
 
 	const {sections} = useMemo(() => { // expensive calc @todo speed up
 		const emojiList = {} // map of emojis to categories
-		categories.forEach(category => {
+		finalCategories.forEach(category => {
 			const key = category.key
 			const list = key === RECENT ? recent : sortEmojis(emojiByCategory(category.name, emojis))
 			emojiList[key] = chunkEmojis(list, key, perLine)
 		})
-		const sections = categories.map(category => ({name: category.name, key: category.key, data: emojiList[category.key]}))
+		const sections = finalCategories.map(category => ({name: category.name, key: category.key, data: emojiList[category.key]}))
 		return ({sections})
-	}, [emojis, categories, recent])
+	}, [emojis, finalCategories, recent])
 
 	const searchResults = useMemo(() => { // expensive calc @todo speed up?
 		if (!searchQuery.length) return []
@@ -117,8 +120,9 @@ const EmojiPicker = ({
 			<TabBar
 				activeCategory={category}
 				onPress={selectTab}
-				categories={categories}
+				categories={finalCategories}
 				darkMode={darkMode}
+				width={width}
 			/>
 			<View style={{flex: 1}}>
 				<View style={styles.searchbarContainer}>

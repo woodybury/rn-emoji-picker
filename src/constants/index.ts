@@ -1,11 +1,7 @@
-import {Dimensions} from 'react-native'
-import {Category} from '../interfaces'
-
-export const WIDTH = Dimensions.get('window').width
 export const RECENT = 'recent'
 export const SEARCH = 'search'
 
-export const categories:Readonly<Category[]> = [
+export const categories = [
 	{key: RECENT, emoji: '🕛', name: 'Recently used'},
 	{key: 'emotion', emoji: '🤪', name: 'Smileys & Emotion'},
 	{key: 'people', emoji: '💁‍♀', name: 'People & Body'},
