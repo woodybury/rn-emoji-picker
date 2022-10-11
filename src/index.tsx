@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import {TabBar} from './tabBar'
 import {Input} from './input'
-import {categories , SEARCH, RECENT} from './constants'
+import {categories , SEARCH, RECENT, categoryKeys} from './constants'
 import {Emoji, Category} from './interfaces'
 import SectionHeader from './sectionHeader'
 import EmojiRow from './emojiRow'
@@ -44,7 +44,7 @@ const EmojiPicker = ({
 	                     onSelect = (emoji: Emoji) => null,
 	                     onChangeRecent = (recent: Emoji[]) => {},
 						 defaultCategory = 'emotion',
-						 enabledCategories = categories.values()['key'],
+						 enabledCategories = categoryKeys,
                      }: Props) => {
 	const [searchQuery, setSearchQuery] = useState('')
 	const [width, setWidth] = useState(0);

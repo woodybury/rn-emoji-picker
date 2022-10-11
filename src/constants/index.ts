@@ -13,3 +13,5 @@ export const categories = [
 	{key: 'emojis', emoji: '⁉', name: 'Symbols'},
 	{key: 'flags', emoji: '🏳️‍🌈', name: 'Flags'}
 ] as const;
+
+export const categoryKeys = categories.map(c => c.key);
