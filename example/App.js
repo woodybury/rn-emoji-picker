@@ -26,6 +26,8 @@ export default function App() {
                 onSelect={console.log} // callback when user selects emoji - returns emoji obj
                 onChangeRecent={setRecent} // callback to update recent storage - arr of emoji objs
                 // backgroundColor={'#000'} // optional custom bg color
+                // enabledCategories={['recent', emotion', 'emojis', 'activities', 'flags', 'food', 'places', 'nature']}
+                // defaultCategory={'food'} // optional custom default category
             />
             <StatusBar style="light"/>
         </View>
