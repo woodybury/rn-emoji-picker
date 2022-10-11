@@ -1,17 +1,17 @@
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native'
-import {WIDTH} from '../constants'
 import {Category} from '../interfaces'
 
 interface Props {
-	categories: Category[]
+	categories: Readonly<Category[]>
 	activeCategory: Category
 	darkMode: boolean
-
+	width: number
+	
 	onPress(category: Category): void
 }
 
-export const TabBar = ({categories, activeCategory, onPress, darkMode}: Props) => {
-	const tabSize = WIDTH / categories.length
+export const TabBar = ({categories, activeCategory, onPress, darkMode, width}: Props) => {
+	const tabSize = width / categories.length
 	const uiSize = tabSize - 20
 
 	return (

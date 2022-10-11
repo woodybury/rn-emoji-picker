@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import {TabBar} from './tabBar'
 import {Input} from './input'
-import {categories, SEARCH, RECENT, WIDTH} from './constants'
+import {categories , SEARCH, RECENT, categoryKeys} from './constants'
 import {Emoji, Category} from './interfaces'
 import SectionHeader from './sectionHeader'
 import EmojiRow from './emojiRow'
@@ -17,18 +17,20 @@ import {chunkEmojis, sortEmojis, emojiByCategory} from './utils'
 // helper fn for end users see https://github.com/yonahforst/react-native-emoji-picker/issues/4
 export const emojiFromUtf16 = (utf16: string) => String.fromCodePoint(...utf16.split('-').map(u => '0x' + u) as any)
 
+type Categories = `${typeof categories[number]['key']}`;
 interface Props {
-	recent: Emoji[]
+	recent?: Emoji[]
 	emojis: Emoji[]
 	loading: boolean
 	autoFocus: boolean
 	darkMode: boolean
 	perLine: number
 	backgroundColor?: string
-
+	defaultCategory?: Categories
+	enabledCategories?: Categories[],
 	onSelect(emoji: Emoji): void
 
-	onChangeRecent(recent: Emoji[]): void
+	onChangeRecent?(recent: Emoji[]): void
 }
 
 const EmojiPicker = ({
@@ -37,27 +39,31 @@ const EmojiPicker = ({
 	                     loading = false,
 	                     autoFocus = true,
 	                     darkMode = true,
-											 backgroundColor = darkMode ? '#000' : '#fff',
+						 backgroundColor = darkMode ? '#000' : '#fff',
 	                     perLine = 8,
 	                     onSelect = (emoji: Emoji) => null,
-	                     onChangeRecent = (recent: Emoji[]) => null
+	                     onChangeRecent = (recent: Emoji[]) => {},
+						 defaultCategory = 'emotion',
+						 enabledCategories = categoryKeys,
                      }: Props) => {
 	const [searchQuery, setSearchQuery] = useState('')
-	const [category, setCategory] = useState(categories[1]) // smiley
-	const colSize = Math.floor(WIDTH / perLine)
+	const [width, setWidth] = useState(0);
+	const colSize = Math.floor(width / perLine)
 	const sectionList = useRef<any>(null)
 	const [init, setInit] = useState(true)
+	const finalCategories = categories.filter(category => enabledCategories.includes(category.key))
+	const [category, setCategory] = useState<Category>(finalCategories.find(c => c.key === defaultCategory) || finalCategories[1]) // smiley
 
 	const {sections} = useMemo(() => { // expensive calc @todo speed up
 		const emojiList = {} // map of emojis to categories
-		categories.forEach(category => {
+		finalCategories.forEach(category => {
 			const key = category.key
 			const list = key === RECENT ? recent : sortEmojis(emojiByCategory(category.name, emojis))
 			emojiList[key] = chunkEmojis(list, key, perLine)
 		})
-		const sections = categories.map(category => ({name: category.name, key: category.key, data: emojiList[category.key]}))
+		const sections = finalCategories.map(category => ({name: category.name, key: category.key, data: emojiList[category.key]}))
 		return ({sections})
-	}, [emojis, categories, recent])
+	}, [emojis, finalCategories, recent])
 
 	const searchResults = useMemo(() => { // expensive calc @todo speed up?
 		if (!searchQuery.length) return []
@@ -108,12 +114,15 @@ const EmojiPicker = ({
 	const activeSection = sections.find(s => s.key === category.key)
 
 	return (
-		<View style={[styles.container, {backgroundColor}]}>
+		<View style={[styles.container, {backgroundColor}]} onLayout={event =>
+			setWidth(event.nativeEvent.layout.width)
+		  }>
 			<TabBar
 				activeCategory={category}
 				onPress={selectTab}
-				categories={categories}
+				categories={finalCategories}
 				darkMode={darkMode}
+				width={width}
 			/>
 			<View style={{flex: 1}}>
 				<View style={styles.searchbarContainer}>
