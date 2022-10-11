@@ -17,7 +17,7 @@ import {chunkEmojis, sortEmojis, emojiByCategory} from './utils'
 // helper fn for end users see https://github.com/yonahforst/react-native-emoji-picker/issues/4
 export const emojiFromUtf16 = (utf16: string) => String.fromCodePoint(...utf16.split('-').map(u => '0x' + u) as any)
 
-type Categories = `${typeof categories[number]['key']}`;
+type CategoryKey = `${typeof categories[number]['key']}`;
 interface Props {
 	recent?: Emoji[]
 	emojis: Emoji[]
@@ -26,26 +26,26 @@ interface Props {
 	darkMode: boolean
 	perLine: number
 	backgroundColor?: string
-	defaultCategory?: Categories
-	enabledCategories?: Categories[],
+	defaultCategory?: CategoryKey
+	enabledCategories?: CategoryKey[],
 	onSelect(emoji: Emoji): void
 
 	onChangeRecent?(recent: Emoji[]): void
 }
 
 const EmojiPicker = ({
-	                     recent = [],
-	                     emojis = [],
-	                     loading = false,
-	                     autoFocus = true,
-	                     darkMode = true,
-						 backgroundColor = darkMode ? '#000' : '#fff',
-	                     perLine = 8,
-	                     onSelect = (emoji: Emoji) => null,
-	                     onChangeRecent = (recent: Emoji[]) => {},
-						 defaultCategory = 'emotion',
-						 enabledCategories = categoryKeys,
-                     }: Props) => {
+	recent = [],
+	emojis = [],
+	loading = false,
+	autoFocus = true,
+	darkMode = true,
+	backgroundColor = darkMode ? '#000' : '#fff',
+	perLine = 8,
+	onSelect = (emoji: Emoji) => null,
+	onChangeRecent = (recent: Emoji[]) => {},
+	defaultCategory = 'emotion',
+	enabledCategories = categoryKeys,
+  }: Props) => {
 	const [searchQuery, setSearchQuery] = useState('')
 	const [width, setWidth] = useState(0);
 	const colSize = Math.floor(width / perLine)
@@ -114,9 +114,7 @@ const EmojiPicker = ({
 	const activeSection = sections.find(s => s.key === category.key)
 
 	return (
-		<View style={[styles.container, {backgroundColor}]} onLayout={event =>
-			setWidth(event.nativeEvent.layout.width)
-		  }>
+		<View style={[styles.container, {backgroundColor}]} onLayout={event => setWidth(event.nativeEvent.layout.width)}>
 			<TabBar
 				activeCategory={category}
 				onPress={selectTab}
