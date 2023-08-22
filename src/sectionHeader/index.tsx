@@ -12,7 +12,7 @@ const SectionHeader = ({name}: { name: string }) => {
 }
 
 const styles = StyleSheet.create({
-	sectionHeader: {margin: 8, fontSize: 17, height: 20, width: '100%', color: '#999'}
+	sectionHeader: {margin: 8, fontSize: 17, width: '100%', color: '#999'}
 })
 
 export default memo(SectionHeader)
